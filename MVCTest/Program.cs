@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MVCTest.Data;
 using MVCTest.Models;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<MVCStudentContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MVCStudentContext") ?? throw new InvalidOperationException("Connection string 'MVCStudentContext' not found.")));
 
 builder.Services.AddDbContext<MvcMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext") ?? throw new InvalidOperationException("Connection string 'MvcMovieContext' not found.")));
@@ -17,6 +19,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     SendData.Initialize(services);
+    SeedStudentsData.Initailize(services);
 }
 
 // Configure the HTTP request pipeline.
